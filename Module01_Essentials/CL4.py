@@ -1,4 +1,4 @@
-### This template is for the class exercises covered in M01_L03_review-fxn-condition for CS 22B.
+# This template is for the class exercises covered in M01_L03_review-fxn-condition for CS 22B.
 
 ## root folder if applicable
 # root='/path/to/folder/'
@@ -9,17 +9,27 @@
 dna = "ATTGGCTATACCGGCATCGGGTAGCC"
 
 # step 1: Write the function that takes in two argument and calculate (num of nucleotide)*100/(total nucleotide)
-
-#def get_percent():
+def get_percent(seq, nt):
+	nt_count = seq.count(nt)
+	per =(nt_count * 100) / len(seq)
+	return per
 
 # step 2: modify the function above to pass in a third argument to return 2 significant figures
+A_per = get_percent(dna, "A")
 
 #def get_percent_2sig():
 
+def get_percent_2sig(seq, nt, sig=2):
+	percent = get_percent(seq, nt)
+	return round(percent,sig)
+print(get_percent_2sig(dna, "A"))
 
 ##### CL4.2: Using assert to test your function
 ### Write assertion statements to test your function, get_percent_2sig.
 ### Part A.: Write assertion that takes in sequence and nucleotide [“A”]
+
+assert abs(get_percent_2sig(dna, "A") - 23.08) < 0.001
+
 
 ### Part B.: If you change the assertion so that the  expected result is 0.80, what is your output?
 
@@ -49,7 +59,23 @@ accession_name = ['ab56', 'bh84', 'hg84', 'ay97', 'cd72', 'ef56']
 ### drosphila.csv's line is separated by ',' and consists of species, sequence, names, expression
 
 ### step 1: import library csv and read in file
+import csv
+data = open("drosphila.csv")
+
 
 ### step 2: Iterate through each line and split string into different variables
+for l in data:
+	columns = l.rstrip("\n").split(",")
+	species = columns[0]
+	seq = columns[1]
+	genes = column[2]
+	exp = columns[3]
+	if species == "Drosophila melanogaster" or species == "Drosophila simulans":
 
-### step 3: compare the variable that contains species name 
+
+
+
+### step 3: compare the variable that contains species name
+
+
+ 
