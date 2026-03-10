@@ -24,18 +24,20 @@ lines = [
 
 ### step 1: Define the count variables
 error_count = re.compile(r"\bERROR\b.*\b(E\d{4})\b")
-#warn_count  = 
-#info_count  = 
+warn_count = re.compile(r"\bWARN\b.*\[[a-zA-Z_]+\]") 
+info_count = re.compile(r"\bINFO\b.*\buser=([a-z]{2}_[0-9]{2})\b")
 
 ### step 2: Initialize the count dictionary 
-#counts = {"ERROR": 0, ...}
+counts = {"ERROR": 0, "WARN": 0, "INFO": 0, "SKIP": 0}
 
 ### step 3: Loop throught the dictionary with if-elif-else
-#for line in lines:
-#    if error_count.search(line):
-#        counts["ERROR"] += 1
-#    elif :
-#    else:
+for line in lines:
+    if error_count.search(line):
+       counts["ERROR"] += 1
+    elif warn_count.search(line):
+       counts["WARN"] += 1
+    else:
+       counts ["SKIP"] += 1
 
 print(counts)
 
@@ -52,15 +54,28 @@ print(counts)
 test_pw = ["Short7!", "LongerPass7!", "GoodPassw0rd!", "Bad Passw0rd!", "N0SymbolHereAAA"]
 
 ### step 1: Define variables
-lowercase = re.compile(r"[a-z]")
-#uppercase = 
-#digit_case = 
-#symbol_case = 
-#space_case = 
+import re
+
+lower = re.compile(r"[a-z]")
+upper = re.compile(r"[A-Z]") 
+digit = re.compile(r"\d")
+symbol = re.compile(r"[!@#$%^&*]")
+space = re.compile(r"\s")
 
 ### step 2: Write a function that check password (str) to test cases
-def check_password(<arg>):
-    strong = (...)
+def check_password(pw: str) -> str:
+    strong = (
+	len(pw) >= 10
+	and lower.search(pw) is not None
+	and upper.search(pw) is not None
+	and digit.search(pw) is not None
+	and symbol.search(pw) is not None
+	and space.search(pw) is None
+)
+
     return "STRONG" if strong else "WEAK"
 
 ### step 3: Use case. Test list test_pw
+for t in test_pw:
+	print(t, "password is ", check_password(t))
+
