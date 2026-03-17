@@ -8,6 +8,20 @@
 ## Raise a ValueError with the message "Input must be a non-negative number" if the input is negative.
 ## Use a try-except block to catch the ValueError when you call the function and print the error message. If no exception occurs, return the square root of the number (you can use number ** 0.5 for simplicity).
 
+def calculate_square_root(number):
+	if number < 0:
+		raise ValueError("Input must be a non-negative number")
+	return number ** 0.5
+
+try:
+	result = calculate_square_root(144)
+	print("Square root:", result)
+
+	result = calculate_square_root(-3)
+	print("Square root:", result)
+
+except ValueError as e:
+	print("Error:", e)
 
 ##### Problem 2: Re-write Exception Handling #####
 ## A Python programmer has written a piece of code below, that reads a DNA sequence from a file and splits it up into a set number of equal-sized pieces (ignoring any incomplete pieces at the end of the sequence). It asks the user to enter the name of the file and the number of pieces, calculates the length of each piece (by dividing the total length by the number of pieces), then uses a range() to print out each piece.
@@ -18,34 +32,37 @@ import os
 import sys
 
 DNA="CTAGCTAGGCGAGCTACGAGAGCTAGCGAGACATCGATCAGTACGATCGACTCGACTAGCTACGACTACGATCAGCTACGATC"
-f = open("dna_test.txt", 'w')
-f.write(DNA)
-f.close()
+
+with open("dna_test.txt", "w") as f:
+	f.write(DNA)
 
 # check for valid filename
-input_file = input('enter filename:\n')
-if not os.path.isfile(input_file):
-    sys.exit('not a valid filename')
+try:
+	input_file = input("enter filename:\n")
 
-f = open(input_file)
-dna = f.read().rstrip("\n")
+	with open(input_file, "r") as f:
+		dna = f.read().rstrip("\n")
 
-# check for valid number
-pieces = input('enter number of pieces:\n')
-if not pieces.isdigit():
-    sys.exit('not a valid number')
+	pieces = input("enter number of pieces:\n")
 
-# check that number is not zero or negative
-pieces = int(pieces)
-if pieces <= 0:
-    sys.exit('number of pieces must be greater than zero')
-# do the processing
-piece_length = int(len(dna) / pieces)
-print('piece length is ' + str(piece_length))
-for start in range(0, len(dna)-piece_length+1, piece_length):
-    print(dna[start:start+piece_length])
+	pieces = int(pieces)
+
+	if piece <= 0:
+		raise ValueError("number of pieces must be greater than zero")
+
+	piece_length = int(len(dna) / pieces)
+	print("piece length is", piece_length)
+
+	for start in range(0, len(dna) - piece_length + 1, piece_length):
+		print(dna[start:start + piece_length])
+
+except FileNotFoundError:
+	print("Error: not a valid file")
+
+except ValueError as e:
+	print("Error:", e)
+
     
-
 ##### Problem 3: Writing a python class with exception handling #####
 ### Write a Python class TemperatureConverter with the following functionality:
 
@@ -64,3 +81,55 @@ for start in range(0, len(dna)-piece_length+1, piece_length):
 ## - Converting 32°F to Celsius.
 ## - Passing an invalid scale (e.g., "K") to the constructor.
 ## - Providing a temperature below absolute zero for either scale.
+
+class TemperatureConverter:
+	def __init__(self, temperature, scale):
+
+		if not isinstance(temperature, (int, float)):
+			raise TypeError("Temperature must be a number")
+
+		if scale.upper() not in ["C", "F"]:
+			raise ValueError("Scale must be 'C' or 'F'")
+
+		self.temperature = temperature
+		self.scale = scale.upper()
+
+	def to_fahrenheit(self):
+		if self.scale == "C":
+			if self.temperature < -273.15:
+				raise ValueError("Temperature below absolute zero in Celsius")
+			return(self.temperature * 9/5) + 32
+		else:
+			return self.temperature
+
+	def to_celsius(self):
+		if self.scale == "F":
+			if self.temperature < -459.67:
+				raise ValueError("Temperature below absolute zero in Fahrenheit")
+			return (self.temperature - 32) * 5/9
+		else:
+			return self.temperature
+
+try:
+	temp1 = TemperatureConverter(100, "C")
+	print("100C in Fahrenheit:", temp1.to_fahrenheit())
+except (TypeError, ValueError) as e:
+	print("Error:", e)
+
+try: 
+	temp2 = TemperatureConverter(32, "F")
+	print("32F in Celsius:", temp2.to_celsius())
+except (TypeError, ValueError) as e:
+	print("Error:", e)
+
+try:
+	temp3 = TemperatureConverter(50, "K")
+except (TypeError, ValueError) as e:
+	print("Error", e)
+
+try:
+	temp4 = TemperatureConverter(-300, "C")
+	print(temp4.to_fahrenheit())
+except (TypeError, ValueError) as e:
+	print("Error:", e)
+
